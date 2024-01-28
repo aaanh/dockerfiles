@@ -6,7 +6,7 @@ WORKDIR /
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt upgrade -y
-RUN apt install -y --no-install-recommends curl wget git build-essential jq ca-certificates zsh gpg apt-transport-https
+RUN apt install -y --no-install-recommends curl wget git build-essential jq ca-certificates zsh gpg apt-transport-https pip
 RUN chsh -s /usr/bin/zsh
 RUN exec zsh
 
@@ -45,14 +45,13 @@ RUN rm -rf *.gz
 ## Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN echo "source $RUSTUP_HOME/env" >> /etc/profile.d/rust.sh
+RUN source "$HOME/.cargo/env"
 
 ## Node Version Manager
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 RUN echo `export NVM_DIR="$HOME/.nvm"` >> ~/.zshrc
 RUN echo `[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm` >> ~/.zshrc
 RUN echo `[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion` >> ~/.zshrc
-
-SHELL [ "/bin/sh", "-ec" ]
 
 ## Java Development Kit (JDK)
 RUN apt install -y --no-install-recommends default-jdk
@@ -64,15 +63,20 @@ ENV JAVA_HOME=/home/.java
 # More tools
 
 ## Neovim
-RUN curl -s https://api.github.com/repos/neovim/neovim/releases/latest \
-    | grep "browser_download_url.*nvim.appimage" \
-    | cut -d : -f 2,3 \
-    | tr -d \" \
-    | wget -qi -
-RUN mv nvim.appimage /usr/bin
+RUN curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep "browser_download_url.*nvim-linux64.tar.gz" | cut -d : -f 2,3 | tr -d '"' | wget -qi -
+RUN tar xzvf nvim-linux64.tar.gz
+RUN rm -rf nvim-linux64.tar.gz
+RUN mv nvim-linux64 /usr/nvim
+RUN echo export PATH=$PATH:/usr/nvim/bin >> ~/.zshrc
+# RUN echo export PATH=$PATH:/usr/nvim/bin >> ~/.bashrc
+
+SHELL [ "/bin/bash", "-ec" ]
 
 ## LunarVim
-RUN bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+RUN curl -O https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh
+SHELL [ "/usr/bin/zsh", "-ec" ]
+RUN export PATH=$PATH:/usr/nvim/bin && chmod +x ./install.sh && yes | bash install.sh && rm install.sh
+RUN echo export PATH=/root/.local/bin:/usr/nvim/bin:$PATH >> ~/.zshrc
 
 # -----------
 
