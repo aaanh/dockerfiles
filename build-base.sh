@@ -1,0 +1,1 @@
+docker build . -f ubuntu.base.Dockerfile -t ghcr.io/aaanh/dockerfiles/debian.base
