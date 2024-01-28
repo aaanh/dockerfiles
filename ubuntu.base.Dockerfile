@@ -61,6 +61,21 @@ ENV JAVA_HOME=/home/.java
 
 # -----------
 
+# More tools
+
+## Neovim
+RUN curl -s https://api.github.com/repos/neovim/neovim/releases/latest \
+    | grep "browser_download_url.*nvim.appimage" \
+    | cut -d : -f 2,3 \
+    | tr -d \" \
+    | wget -qi -
+RUN mv nvim.appimage /usr/bin
+
+## LunarVim
+RUN bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+
+# -----------
+
 ENV DONT_PROMPT_WSL_INSTALL=true
 
 # CONTAINER START
