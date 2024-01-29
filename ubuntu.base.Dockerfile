@@ -68,8 +68,8 @@ RUN tar xzvf nvim-linux64.tar.gz
 RUN rm -rf nvim-linux64.tar.gz
 RUN mv nvim-linux64 /usr/nvim
 RUN echo export PATH=$PATH:/usr/nvim/bin >> ~/.zshrc
-# RUN echo export PATH=$PATH:/usr/nvim/bin >> ~/.bashrc
 
+# Switch back to bash to run lunarvim install scripts
 SHELL [ "/bin/bash", "-ec" ]
 
 ## LunarVim
