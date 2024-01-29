@@ -80,6 +80,12 @@ RUN echo export PATH=/root/.local/bin:/usr/nvim/bin:$PATH >> ~/.zshrc
 
 # -----------
 
+## Clean ups
+
+RUN rm -rf *.gz
+
+# -----------
+
 ENV DONT_PROMPT_WSL_INSTALL=true
 
 # CONTAINER START
