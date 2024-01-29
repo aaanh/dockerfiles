@@ -35,6 +35,7 @@ docker run -it ghcr.io/aaanh/dockerfiles/ubuntu.base:main
   code tunnel --no-sandbox --user-data-dir=/home
   ```
 - `gh` (Github CLI)
+- `nvim` + `lvim` (NeoVim + LunarVim)
 
 # Manifest
 
